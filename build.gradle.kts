@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.openapi.generator)
     alias(libs.plugins.google.devtools.ksp)
     kotlin("jvm") version "2.0.20"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 group = "com.dpv"

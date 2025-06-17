@@ -12,5 +12,6 @@ data class BookDto(
     val description: String? = null,
     @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val updatedAt: LocalDateTime
 )

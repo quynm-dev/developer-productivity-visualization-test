@@ -1,6 +1,8 @@
 package com.dpv.controller
 
+import com.dpv.helper.respondError
 import com.dpv.service.book.BookService
+import com.github.michaelbull.result.mapBoth
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,7 +13,10 @@ fun Route.bookController() {
 
     route("/books") {
         get {
-            call.respond(bookService.getAllBooks().toString())
+            bookService.getAllBooks().mapBoth(
+                success = { call.respond(it.toString()) },
+                failure = { call.respondError(it) }
+            )
         }
     }
 }
