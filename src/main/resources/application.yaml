@@ -4,3 +4,10 @@ ktor:
       - com.dpv.ApplicationKt.module
   deployment:
     port: 8080
+
+dpv:
+  db:
+    username: root
+    password: root
+    url: "jdbc:mysql://localhost:3307/dpv-db"
+    driver: "com.mysql.cj.jdbc.Driver"

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: mysql:9.0.1
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: dpv-db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+
+volumes:
+  db-data:
+    driver: local

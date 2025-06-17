@@ -1,13 +1,11 @@
-package com.dpv
+package com.dpv.config
 
+import com.dpv.controller.bookController
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        bookController()
     }
 }
