@@ -11,3 +11,8 @@ dpv:
     password: root
     url: "jdbc:mysql://localhost:3307/dpv-db"
     driver: "com.mysql.cj.jdbc.Driver"
+
+github:
+  pat: "pat"
+  baseUrl: "https://api.github.com"
+  xGithubApiVersion: "2022-11-28"

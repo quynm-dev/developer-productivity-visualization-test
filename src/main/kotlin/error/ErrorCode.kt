@@ -2,8 +2,7 @@ package com.dpv.error
 
 import io.ktor.http.*
 
-val BOOK_ERROR_CODE_FACTORY = CommonErrorCodeFactory(ErrorDomain.BOOK)
-val USER_ERROR_CODE_FACTORY = CommonErrorCodeFactory(ErrorDomain.USER)
+val GITHUB_ERROR_CODE_FACTORY = CommonErrorCodeFactory(ErrorDomain.GITHUB)
 val GENERIC_ERROR_CODE_FACTORY = CommonErrorCodeFactory(ErrorDomain.GENERIC)
 
 data class ErrorCode(

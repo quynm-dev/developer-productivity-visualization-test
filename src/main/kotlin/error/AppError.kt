@@ -13,5 +13,12 @@ data class AppError(
                 cause = ex.cause?.stackTraceToString()
             )
         }
+
+        fun new(code: ErrorCode, message: String): AppError {
+            return AppError(
+                code = code,
+                message = message
+            )
+        }
     }
 }

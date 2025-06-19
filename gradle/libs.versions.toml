@@ -5,6 +5,7 @@ ktor = "2.3.12"
 
 # Logging
 logback = "1.4.14"
+micrologging = "3.0.4"
 
 # DI
 koin = "4.0.0"
@@ -56,6 +57,7 @@ ktor-server-auth-jvm = { module = "io.ktor:ktor-server-auth-jvm", version.ref = 
 
 # Logging
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kotlin-logging-jvm = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "micrologging" }
 
 # DI
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
@@ -111,7 +113,8 @@ ktor = [
 ]
 
 logging = [
-    "logback"
+    "logback",
+    "kotlin-logging-jvm"
 ]
 
 di = [
