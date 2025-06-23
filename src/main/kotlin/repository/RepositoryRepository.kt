@@ -1,6 +1,6 @@
 package com.dpv.repository
 
-import com.dpv.data.dto.RepositoryDto
+import com.dpv.data.dto.github.RepositoryDto
 import com.dpv.data.entity.Repositories
 import com.dpv.data.entity.RepositoryEntity
 import com.dpv.data.model.RepositoryModel

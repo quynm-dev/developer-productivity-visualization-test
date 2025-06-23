@@ -1,6 +1,6 @@
 package com.dpv.repository
 
-import com.dpv.data.dto.UserDto
+import com.dpv.data.dto.github.UserDto
 import com.dpv.data.entity.UserEntity
 import com.dpv.data.entity.Users
 import mu.KotlinLogging

@@ -1,4 +1,4 @@
-package com.dpv.data.dto
+package com.dpv.data.dto.github
 
 import com.dpv.data.serialization.ISO8601LocalDateTimeSerializer
 import kotlinx.serialization.Serializable

@@ -1,10 +1,14 @@
 package com.dpv.service.github
 
 import com.dpv.client.RestClient
-import com.dpv.data.dto.RateLimitDto
+import com.dpv.data.dto.github.RateLimitDto
 import com.dpv.error.AppError
 import com.dpv.error.GITHUB_ERROR_CODE_FACTORY
 import com.dpv.helper.*
+import com.dpv.service.CommitService
+import com.dpv.service.PullService
+import com.dpv.service.RepositoryService
+import com.dpv.service.UserService
 import com.github.michaelbull.result.getOrElse
 import io.ktor.server.application.*
 import org.koin.core.annotation.Singleton
@@ -14,10 +18,14 @@ import java.time.LocalDateTime
 class GithubService(
     environment: ApplicationEnvironment,
     private val restClient: RestClient,
-    private val repoService: GithubRepositoryService,
-    private val commitService: GithubCommitService,
-    private val userService: GithubUserService,
-    private val pullService: GithubPullService
+    private val repoService: RepositoryService,
+    private val commitService: CommitService,
+    private val userService: UserService,
+    private val pullService: PullService,
+    private val githubRepoService: GithubRepositoryService,
+    private val githubCommitService: GithubCommitService,
+    private val githubUserService: GithubUserService,
+    private val githubPullService: GithubPullService
 ) : GithubConfiguration(environment) {
     suspend fun getRateLimit(): UniResult<RateLimitDto> {
         val response = restClient.get(BASE_URL) {
@@ -40,7 +48,7 @@ class GithubService(
                 return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to find repository").err()
             }
 
-            val repo = repoService.getRepo(repoName).getOrElse {
+            val repo = githubRepoService.getRepo(repoName).getOrElse {
                 return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to get github repo").err()
             }
 
@@ -74,7 +82,7 @@ class GithubService(
     }
 
     suspend fun syncCommits(since: LocalDateTime? = null, until: LocalDateTime? = null, commitsUrl: String): UniResult<Boolean> {
-        val commits = commitService.getCommits(since, until, commitsUrl).getOrElse {
+        val commits = githubCommitService.getCommits(since, until, commitsUrl).getOrElse {
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to get commits").err()
         }
 
@@ -84,7 +92,7 @@ class GithubService(
                     return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to find user with username: ${commit.commit.author.name}").err()
                 }
 
-                val user = userService.getUser(commit.commit.author.name).getOrElse {
+                val user = githubUserService.getUser(commit.commit.author.name).getOrElse {
                     return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to get user").err()
                 }
 
@@ -104,7 +112,7 @@ class GithubService(
     }
 
     suspend fun syncPulls(pullsUrl: String): UniResult<Boolean> {
-        val pulls = pullService.getPulls(pullsUrl).getOrElse {
+        val pulls = githubPullService.getPulls(pullsUrl).getOrElse {
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to get pulls").err()
         }
 
@@ -114,7 +122,7 @@ class GithubService(
                     return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to find user with id: ${pull.user.id}").err()
                 }
 
-                val user = userService.getUser(pull.user.username).getOrElse {
+                val user = githubUserService.getUser(pull.user.username).getOrElse {
                     return AppError.new(GITHUB_ERROR_CODE_FACTORY.INTERNAL_SERVER_ERROR, "Failed to get user").err()
                 }
 
