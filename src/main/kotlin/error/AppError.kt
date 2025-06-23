@@ -21,4 +21,9 @@ data class AppError(
             )
         }
     }
+
+
+    fun hasCode(code: ErrorCode): Boolean {
+        return this.code == code
+    }
 }

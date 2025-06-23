@@ -11,9 +11,9 @@ import org.koin.ktor.ext.inject
 fun Route.githubController() {
     val githubService by inject<GithubService>()
 
-    route("/github") {
-        get("/rate-limit") {
-            githubService.getRateLimit().mapBoth(
+    route("/sync") {
+        get {
+            githubService.sync("repoName").mapBoth(
                 success = { call.respond(it) },
                 failure = { call.respondError(it) }
             )

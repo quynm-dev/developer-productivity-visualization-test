@@ -3,17 +3,17 @@ package com.dpv.data.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetRateLimitDto(
-    val resources: GetRateLimitResources
+data class RateLimitDto(
+    val resources: RateLimitResources
 )
 
 @Serializable
-data class GetRateLimitResources(
-    val core: GetRateLimitResourcesCore
+data class RateLimitResources(
+    val core: RateLimitResourcesCore
 )
 
 @Serializable
-data class GetRateLimitResourcesCore(
+data class RateLimitResourcesCore(
     val limit: Int,
     val used: Int,
     val remaining: Int,
