@@ -1,4 +1,4 @@
-package com.dpv.data.dto
+package com.dpv.data.dto.github
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

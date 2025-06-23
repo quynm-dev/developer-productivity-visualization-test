@@ -1,6 +1,6 @@
 package com.dpv.repository
 
-import com.dpv.data.dto.CommitDto
+import com.dpv.data.dto.github.CommitDto
 import com.dpv.data.entity.Commits
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.insert

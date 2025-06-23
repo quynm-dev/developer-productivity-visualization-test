@@ -1,6 +1,6 @@
 package com.dpv.repository
 
-import com.dpv.data.dto.PullDto
+import com.dpv.data.dto.github.PullDto
 import com.dpv.data.entity.Pulls
 import com.dpv.data.enum.PullStatus
 import mu.KotlinLogging
