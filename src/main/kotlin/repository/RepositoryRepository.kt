@@ -33,7 +33,7 @@ class RepositoryRepository {
 
     suspend fun create(repo: RepositoryDto): Long {
         return newSuspendedTransaction {
-            logger.info { "[RepositoryRepository:create] with name: ${repo.name}" }
+            logger.info { "[RepositoryRepository:create]" }
             Repositories.insert {
                 it[id] = repo.id
                 it[name] = repo.name
@@ -42,7 +42,7 @@ class RepositoryRepository {
                 it[language] = repo.language
                 it[pullsUrl] = repo.pullsUrl.substringBefore("{")
                 it[commitsUrl] = repo.commitsUrl.substringBefore("{")
-                it[lastSyncAt] = LocalDateTime.now()
+                it[lastSyncAt] = null
                 it[createdAt] = LocalDateTime.now()
                 it[updatedAt] = LocalDateTime.now()
             }

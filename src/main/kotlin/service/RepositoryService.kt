@@ -22,7 +22,7 @@ class RepositoryService(
     suspend fun findById(id: Long): UniResult<RepositoryModel> {
         val repo = repoRepository.findById(id)
         if (repo == null) {
-            logger.warn("[GithubRepositoryService:findById] Repo with id: $id not found")
+            logger.warn("[RepositoryService:findById] with id: $id not found")
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND, "Repository with id $id not found").err()
         }
 
@@ -30,9 +30,10 @@ class RepositoryService(
     }
 
     suspend fun findByName(name: String): UniResult<RepositoryModel> {
+        logger.info { "[RepositoryService:findByName] Finding repo with name: $name" }
         val repo = repoRepository.findByName(name)
         if (repo == null) {
-            logger.warn("[GithubRepositoryService:findByName] Repo with name: $name not found")
+            logger.warn("[RepositoryService:findByName] Repo with name: $name not found")
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND, "Repository with name $name not found").err()
         }
 
