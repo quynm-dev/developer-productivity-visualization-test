@@ -4,6 +4,7 @@ import com.dpv.data.dto.github.UserDto
 import com.dpv.data.entity.UserEntity
 import com.dpv.data.entity.Users
 import mu.KotlinLogging
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.koin.core.annotation.Singleton
@@ -43,6 +44,21 @@ class UserRepository {
             }
 
             userDto.id
+        }
+    }
+
+    suspend fun bulkCreate(userDtos: List<UserDto>): Boolean {
+        return newSuspendedTransaction {
+            logger.info { "[UserRepository:bulkCreate]" }
+            Users.batchInsert(userDtos) { userDto ->
+                this[Users.id] = userDto.id
+                this[Users.username] = userDto.name
+                this[Users.githubUrl] = userDto.url
+                this[Users.avatarUrl] = userDto.avatarUrl
+                this[Users.githubId] = userDto.id
+                this[Users.createdAt] = LocalDateTime.now()
+                this[Users.updatedAt] = LocalDateTime.now()
+            }.isNotEmpty()
         }
     }
 }

@@ -21,7 +21,7 @@ class UserService(
     suspend fun findIdByUsername(username: String): UniResult<Long> {
         val user = userRepository.findIdByUsername(username)
         if (user == null) {
-            logger.warn("[GithubUserService:findIdByUsername] User with username: $username not found")
+            logger.warn("[UserService:findIdByUsername] User with username: $username not found")
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND, "User with username $username not found").err()
         }
 
@@ -31,7 +31,7 @@ class UserService(
     suspend fun validateExistence(id: Long): UniResult<Boolean> {
         val exist = userRepository.validateExistence(id)
         if (!exist) {
-            logger.warn("[GithubUserService:validateExistence] User with id: $id does not exist")
+            logger.warn("[UserService:validateExistence] User with id: $id does not exist")
             return AppError.new(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND, "User with id $id does not exist").err()
         }
 
@@ -40,5 +40,9 @@ class UserService(
 
     suspend fun create(userDto: UserDto): UniResult<Long> {
         return userRepository.create(userDto).ok()
+    }
+
+    suspend fun bulkCreate(userDtos: List<UserDto>): UniResult<Boolean> {
+        return userRepository.bulkCreate(userDtos).ok()
     }
 }
