@@ -1,6 +1,7 @@
 package com.dpv.service.github
 
 import com.dpv.client.RestClient
+import com.dpv.data.dto.github.CommitDto
 import com.dpv.data.dto.github.PullDto
 import com.dpv.data.dto.github.RateLimitDto
 import com.dpv.data.dto.github.UserDto
@@ -77,6 +78,7 @@ class GithubService(
         }
 
         val existUserIds = mutableListOf<Long>()
+        val newCommits = mutableListOf<CommitDto>()
         commits.forEach { commit ->
             if(!existUserIds.contains(commit.author.id)) {
                 userService.validateExistence(commit.author.id).getOrElse { validateExistenceErr ->
@@ -96,9 +98,22 @@ class GithubService(
                 existUserIds.add(commit.author.id)
             }
 
-            commitService.create(commit, commit.author.id).getOrElse { createErr ->
-                return createErr.err()
+            val exist = commitService.validateExistence(commit.sha).getOrElse { validateExistenceErr ->
+                if (!validateExistenceErr.hasCode(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND)) {
+                    return validateExistenceErr.err()
+                }
+
+                newCommits.add(commit)
             }
+            if(exist) {
+                commitService.update(commit.sha, commit).getOrElse { createErr ->
+                    return createErr.err()
+                }
+            }
+        }
+
+        commitService.bulkCreate(newCommits).getOrElse { bulkCreateErr ->
+            return bulkCreateErr.err()
         }
 
         return Unit.ok()
@@ -128,13 +143,17 @@ class GithubService(
                 }
             }
 
-            // update existing pulls
-            pullService.validateExistence(pull.id).getOrElse { validateExistenceErr ->
+            val exist = pullService.validateExistence(pull.id).getOrElse { validateExistenceErr ->
                 if (!validateExistenceErr.hasCode(GITHUB_ERROR_CODE_FACTORY.NOT_FOUND)) {
                     return validateExistenceErr.err()
                 }
 
                 newPulls.add(pull)
+            }
+            if(exist) {
+                pullService.update(pull.id, pull).getOrElse { updateErr ->
+                    return updateErr.err()
+                }
             }
         }
 
@@ -142,7 +161,7 @@ class GithubService(
             return bulkCreateErr.err()
         }
 
-        pullService.bulkCreate(pulls).getOrElse { bulkCreateErr ->
+        pullService.bulkCreate(newPulls).getOrElse { bulkCreateErr ->
             return bulkCreateErr.err()
         }
 

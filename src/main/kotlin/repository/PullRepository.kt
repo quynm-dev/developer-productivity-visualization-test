@@ -18,6 +18,7 @@ import mu.KotlinLogging
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
 import org.koin.core.annotation.Singleton
 import java.time.LocalDateTime
 
@@ -68,6 +69,23 @@ class PullRepository {
         return newSuspendedTransaction {
             logger.info { "[PullRepository:validateExistence] with id: $id" }
             PullEntity.findById(id) != null
+        }
+    }
+
+    suspend fun update(id: Long, pullDto: PullDto): Boolean {
+        return newSuspendedTransaction {
+            logger.info { "[PullRepository:update] with id: $id" }
+            Pulls.update({ Pulls.id eq id }) {
+                it[githubUrl] = pullDto.url
+                it[state] = PullStatus.fromString(pullDto.state)
+                it[title] = pullDto.title
+                it[userId] = pullDto.user.id
+                it[closedAt] = pullDto.closedAt
+                it[mergedAt] = pullDto.mergedAt
+                it[githubCreatedAt] = pullDto.createdAt
+                it[githubUpdatedAt] = pullDto.updatedAt
+                it[updatedAt] = LocalDateTime.now()
+            } > 0
         }
     }
 }

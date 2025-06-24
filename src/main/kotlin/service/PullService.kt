@@ -7,6 +7,7 @@ import com.dpv.helper.UniResult
 import com.dpv.helper.err
 import com.dpv.helper.ok
 import com.dpv.repository.PullRepository
+import mu.KotlinLogging
 import org.koin.core.annotation.Singleton
 
 @Singleton
@@ -14,7 +15,7 @@ class PullService(
     private val pullRepository: PullRepository
 ) {
     companion object {
-        private val logger = mu.KotlinLogging.logger {}
+        private val logger = KotlinLogging.logger {}
     }
 
     suspend fun create(pullDto: PullDto): UniResult<Long> {
@@ -33,5 +34,9 @@ class PullService(
         }
 
         return exist.ok()
+    }
+
+    suspend fun update(id: Long, pullDto: PullDto): UniResult<Boolean> {
+        return pullRepository.update(id, pullDto).ok()
     }
 }

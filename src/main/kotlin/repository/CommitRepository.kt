@@ -1,11 +1,13 @@
 package com.dpv.repository
 
 import com.dpv.data.dto.github.CommitDto
+import com.dpv.data.entity.CommitEntity
 import com.dpv.data.entity.Commits
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
 import org.koin.core.annotation.Singleton
 import java.time.LocalDateTime
 
@@ -42,6 +44,26 @@ class CommitRepository {
                 this[Commits.createdAt] = LocalDateTime.now()
                 this[Commits.updatedAt] = LocalDateTime.now()
             }.isNotEmpty()
+        }
+    }
+
+    suspend fun validateExistence(hash: String): Boolean {
+        return newSuspendedTransaction {
+            logger.info { "[CommitRepository:validateExistence] with hash: $hash" }
+            CommitEntity.find { Commits.hash eq hash }.firstOrNull() != null
+        }
+    }
+
+    suspend fun update(hash: String, commitDto: CommitDto): Boolean {
+        return newSuspendedTransaction {
+            logger.info { "[CommitRepository:update] with hash: $hash" }
+            Commits.update({ Commits.hash eq hash }) {
+                it[userId] = commitDto.author.id
+                it[githubUrl] = commitDto.commit.url
+                it[message] = commitDto.commit.message
+                it[commitedAt] = commitDto.commit.author.date
+                it[updatedAt] = LocalDateTime.now()
+            } > 0
         }
     }
 }

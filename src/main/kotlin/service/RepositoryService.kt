@@ -30,7 +30,7 @@ class RepositoryService(
     }
 
     suspend fun findByName(name: String): UniResult<RepositoryModel> {
-        logger.info { "[RepositoryService:findByName] Finding repo with name: $name" }
+        logger.info { "[RepositoryService:findByName] with name: $name" }
         val repo = repoRepository.findByName(name)
         if (repo == null) {
             logger.warn("[RepositoryService:findByName] Repo with name: $name not found")
