@@ -13,4 +13,8 @@ class CommitService(
     suspend fun create(commitDto: CommitDto, userId: Long): UniResult<Long> {
         return commitRepository.create(commitDto, userId).ok()
     }
+
+    suspend fun bulkCreate(commitDtos: List<CommitDto>): UniResult<Boolean> {
+        return commitRepository.bulkCreate(commitDtos).ok()
+    }
 }

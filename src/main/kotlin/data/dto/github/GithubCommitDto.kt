@@ -1,6 +1,7 @@
 package com.dpv.data.dto.github
 
 import com.dpv.data.serialization.ISO8601LocalDateTimeSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime
 data class CommitDto(
     val sha: String,
     val commit: CommitCommit,
+    val author: CommitAuthor
 )
 
 @Serializable
@@ -19,8 +21,13 @@ data class CommitCommit(
 
 @Serializable
 data class CommitCommitAuthor(
-    val name: String,
-    val email: String,
     @Serializable(with = ISO8601LocalDateTimeSerializer::class)
     val date: LocalDateTime
+)
+
+@Serializable
+data class CommitAuthor(
+    val id: Long,
+    @SerialName("login")
+    val username: String
 )
